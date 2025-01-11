@@ -101,10 +101,13 @@ export default function TgeForm({
   const [tokenBalance, allowance] = data.data || [];
   const balance = isNative ? nativeBalance.data?.value : tokenBalance?.result;
 
-  const price = useMemo(
-    () => BigInt(quantity) * BigInt(tge.price),
-    [quantity, tge.price]
-  );
+  const price = useMemo(() => {
+    try {
+      return BigInt(quantity) * BigInt(tge.price);
+    } catch {
+      return BigInt(0);
+    }
+  }, [quantity, tge.price]);
 
   const requireAllowance = useMemo(() => {
     if (isNative) return false;
@@ -147,7 +150,7 @@ export default function TgeForm({
         functionName: "claim",
         args: [
           account.address as Address,
-          BigInt(quantity),
+          BigInt(quantity) * BigInt(10 ** tge.token.decimals),
           currency,
           BigInt(tge.price),
           {
@@ -158,6 +161,7 @@ export default function TgeForm({
           },
           "0x",
         ],
+        value: isNative ? price : BigInt(0),
       });
       await waitForTransactionReceipt(client, { hash });
       await data.refetch();
@@ -260,14 +264,7 @@ export default function TgeForm({
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
             className="pr-16"
-            placeholder={`${
-              tge.limitPerWallet > 0
-                ? formatUnits(
-                    BigInt(tge.limitPerWallet),
-                    tge.token.decimals || 18
-                  )
-                : "100"
-            } ${tge.token.symbol}`}
+            placeholder={`100 ${tge.token.symbol}`}
             min="0"
             max={
               tge.limitPerWallet > 0

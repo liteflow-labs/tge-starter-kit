@@ -1,10 +1,18 @@
-import { formatUnits as baseFormatUnit } from "viem";
+import { formatUnits as baseFormatUnit, maxInt128 } from "viem";
 
 const { format } = new Intl.NumberFormat("en", {
   notation: "compact",
   compactDisplay: "short",
   maximumFractionDigits: 6,
 });
+
+const toBigInt = (value: number | bigint | string) => {
+  try {
+    return BigInt(value);
+  } catch {
+    return BigInt(0);
+  }
+};
 
 export function NumberFormatter({
   value,
@@ -15,9 +23,11 @@ export function NumberFormatter({
 }) {
   if (value === null) return "--";
   if (value === undefined) return "--";
+  const bigIntValue = toBigInt(value);
+  if (bigIntValue > maxInt128) return "∞"; // TODO: change to maxInt256 when API returns a proper bigint not truncated
   return (
     <span title={value.toString()} className="font-mono">
-      {format(parseFloat(baseFormatUnit(BigInt(value), decimals)))}
+      {format(parseFloat(baseFormatUnit(bigIntValue, decimals)))}
     </span>
   );
 }
