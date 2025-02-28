@@ -241,7 +241,7 @@ export default function TgeForm({
             {tge.token.symbol}
           </span>
         </div>
-        {tge.limitPerWallet > 0 && (
+        {BigInt(tge.limitPerWallet) > BigInt(0) && (
           <div className="flex justify-between text-sm">
             <span>Limit per wallet:</span>
             <span>
@@ -267,7 +267,7 @@ export default function TgeForm({
             placeholder={`100 ${tge.token.symbol}`}
             min="0"
             max={
-              tge.limitPerWallet > 0
+              BigInt(tge.limitPerWallet) > BigInt(0)
                 ? formatUnits(
                     BigInt(tge.limitPerWallet),
                     tge.token.decimals || 18
