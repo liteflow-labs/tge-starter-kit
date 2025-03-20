@@ -47,24 +47,24 @@ export function CountdownTimer({ targetDate }: CountdownTimerProps) {
       {time.days > 0 && (
         <>
           <div className="flex flex-col items-center">
-            <div className="text-4xl font-bold font-mono">{pad(time.days)}</div>
+            <div className="font-mono text-4xl font-bold">{pad(time.days)}</div>
             <div className="text-xs">Days</div>
           </div>
-          <div className="text-4xl font-bold mb-5">:</div>
+          <div className="mb-5 text-4xl font-bold">:</div>
         </>
       )}
       <div className="flex flex-col items-center">
-        <div className="text-4xl font-bold font-mono">{pad(time.hours)}</div>
+        <div className="font-mono text-4xl font-bold">{pad(time.hours)}</div>
         <div className="text-xs">Hours</div>
       </div>
-      <div className="text-4xl font-bold mb-5">:</div>
+      <div className="mb-5 text-4xl font-bold">:</div>
       <div className="flex flex-col items-center">
-        <div className="text-4xl font-bold font-mono">{pad(time.minutes)}</div>
+        <div className="font-mono text-4xl font-bold">{pad(time.minutes)}</div>
         <div className="text-xs">Mins</div>
       </div>
-      <div className="text-4xl font-bold mb-5">:</div>
+      <div className="mb-5 text-4xl font-bold">:</div>
       <div className="flex flex-col items-center">
-        <div className="text-4xl font-bold font-mono">{pad(time.seconds)}</div>
+        <div className="font-mono text-4xl font-bold">{pad(time.seconds)}</div>
         <div className="text-xs">Secs</div>
       </div>
     </div>
