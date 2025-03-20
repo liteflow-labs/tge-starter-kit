@@ -27,9 +27,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-muted/50`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-muted/50 antialiased`}
       >
-        <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-accent/20 blur-xl -z-10" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-primary/20 to-accent/20 blur-xl" />
         <Providers cookie={(await headers()).get("cookie") || ""}>
           {children}
         </Providers>

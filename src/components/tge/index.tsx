@@ -28,15 +28,15 @@ export default function Tge({
 
   if (tge.isLoading)
     return (
-      <LoaderPinwheelIcon className="size-20 text-muted-foreground animate-spin" />
+      <LoaderPinwheelIcon className="size-20 animate-spin text-muted-foreground" />
     );
   if (tge.error)
     return <p className="text-destructive">Error: {tge.error.message}</p>;
   if (!tge.data) return <p>No data</p>;
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6">
-      <div className="grid md:grid-cols-2 gap-8">
+    <div className="mx-auto w-full max-w-4xl space-y-6">
+      <div className="grid gap-8 md:grid-cols-2">
         <Card className="bg-transparent shadow-none">
           <CardHeader>
             <CardTitle className="text-3xl">
@@ -52,7 +52,7 @@ export default function Tge({
               used to create your token sale.
             </p>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-2 items-start">
+          <CardFooter className="flex flex-col items-start space-y-2">
             <TgeState
               tge={tge.data}
               notStarted={
@@ -97,7 +97,7 @@ export default function Tge({
               </div>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6 h-full">
+          <CardContent className="h-full space-y-6">
             <TgeState
               tge={tge.data}
               notStarted={<TgeComingSoon />}

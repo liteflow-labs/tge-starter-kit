@@ -9,9 +9,9 @@ export default function Home() {
   if (!address) throw new Error("Missing tge contract address");
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <main className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
+    <div className="flex min-h-screen flex-col">
+      <main className="flex flex-grow items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex w-full max-w-4xl flex-col items-center">
           <Tge chainId={chainId} address={address} />
         </div>
       </main>
