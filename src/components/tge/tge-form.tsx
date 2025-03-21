@@ -7,7 +7,7 @@ import { GetTgesByChainIdByAddressResponse } from "@liteflow/sdk/dist/client";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useMutation } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Address, erc20Abi, formatUnits, getAddress } from "viem";
+import { erc20Abi, formatUnits, getAddress } from "viem";
 import { waitForTransactionReceipt } from "viem/actions";
 import {
   useAccount,
@@ -77,26 +77,29 @@ export default function TgeForm({
   const nativeBalance = useBalance({
     query: { enabled: isNative },
     chainId: tge.chainId,
-    address: account.address as Address,
+    address: account.address,
   });
   const data = useReadContracts({
     query: { enabled: !!account.address && !isNative },
-    contracts: [
-      {
-        abi: erc20Abi,
-        chainId: tge.chainId,
-        address: tge.currency.address as Address,
-        functionName: "balanceOf",
-        args: [account.address as Address],
-      },
-      {
-        abi: erc20Abi,
-        chainId: tge.chainId,
-        address: tge.currency.address as Address,
-        functionName: "allowance",
-        args: [account.address as Address, tge.contractAddress as Address],
-      },
-    ],
+    contracts:
+      account.address && tge.currency.address
+        ? [
+            {
+              abi: erc20Abi,
+              chainId: tge.chainId,
+              address: getAddress(tge.currency.address),
+              functionName: "balanceOf",
+              args: [account.address],
+            },
+            {
+              abi: erc20Abi,
+              chainId: tge.chainId,
+              address: getAddress(tge.currency.address),
+              functionName: "allowance",
+              args: [account.address, getAddress(tge.contractAddress)],
+            },
+          ]
+        : undefined,
   });
   const [tokenBalance, allowance] = data.data || [];
   const balance = isNative ? nativeBalance.data?.value : tokenBalance?.result;
@@ -122,13 +125,14 @@ export default function TgeForm({
   const approve = useMutation({
     mutationFn: async () => {
       if (!client) throw new Error("Client not found");
+      if (!tge.currency.address) throw new Error("no currency address");
       await chain.switchChainAsync({ chainId: tge.chainId });
       const hash = await approveTx.writeContractAsync({
         chainId: tge.chainId,
         abi: erc20Abi,
-        address: tge.currency.address as Address,
+        address: getAddress(tge.currency.address),
         functionName: "approve",
-        args: [tge.contractAddress as Address, price],
+        args: [getAddress(tge.contractAddress), price],
       });
       await waitForTransactionReceipt(client, { hash });
       await data.refetch();
@@ -139,6 +143,7 @@ export default function TgeForm({
   const claim = useMutation({
     mutationFn: async () => {
       if (!client) throw new Error("Client not found");
+      if (!account.address) throw new Error("account not connected");
       await chain.switchChainAsync({ chainId: tge.chainId });
       const currency = getAddress(
         tge.currency.address || "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
@@ -146,10 +151,10 @@ export default function TgeForm({
       const hash = await claimTx.writeContractAsync({
         chainId: tge.chainId,
         abi,
-        address: tge.contractAddress as Address,
+        address: getAddress(tge.contractAddress),
         functionName: "claim",
         args: [
-          account.address as Address,
+          getAddress(account.address),
           BigInt(quantity) * BigInt(10 ** tge.token.decimals),
           currency,
           BigInt(tge.price),
