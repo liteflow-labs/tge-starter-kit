@@ -1,6 +1,6 @@
 import { formatUnits as baseFormatUnit, maxInt128 } from "viem";
 
-const { format } = new Intl.NumberFormat("en", {
+const formatter = new Intl.NumberFormat("en", {
   notation: "compact",
   compactDisplay: "short",
   maximumFractionDigits: 6,
@@ -27,7 +27,7 @@ export function NumberFormatter({
   if (bigIntValue > maxInt128) return "∞"; // TODO: change to maxInt256 when API returns a proper bigint not truncated
   return (
     <span title={value.toString()} className="font-mono">
-      {format(parseFloat(baseFormatUnit(bigIntValue, decimals)))}
+      {formatter.format(parseFloat(baseFormatUnit(bigIntValue, decimals)))}
     </span>
   );
 }
