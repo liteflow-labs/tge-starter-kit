@@ -7,7 +7,7 @@ import { GetTgesByChainIdByAddressResponse } from "@liteflow/sdk/dist/client";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useMutation } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Address, erc20Abi, formatUnits } from "viem";
+import { Address, erc20Abi, formatUnits, getAddress } from "viem";
 import { waitForTransactionReceipt } from "viem/actions";
 import {
   useAccount,
@@ -140,9 +140,9 @@ export default function TgeForm({
     mutationFn: async () => {
       if (!client) throw new Error("Client not found");
       await chain.switchChainAsync({ chainId: tge.chainId });
-      const currency =
-        (tge.currency.address as Address) ||
-        "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
+      const currency = getAddress(
+        tge.currency.address || "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+      );
       const hash = await claimTx.writeContractAsync({
         chainId: tge.chainId,
         abi,
