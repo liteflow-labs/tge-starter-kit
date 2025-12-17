@@ -10,9 +10,9 @@ export default function TgeState({
   ended,
 }: {
   tge: GetTgesByChainIdByAddressResponse;
-  notStarted: JSX.Element;
-  inProgress: JSX.Element;
-  ended: JSX.Element;
+  notStarted: React.JSX.Element;
+  inProgress: React.JSX.Element;
+  ended: React.JSX.Element;
 }) {
   const now = useNow();
   if (now < tge.startDate) return notStarted;
